@@ -1,4 +1,4 @@
-module tekton-install
+module github.com/danielhelfand/tekton-install
 
 go 1.14
 
