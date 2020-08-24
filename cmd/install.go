@@ -39,13 +39,13 @@ tekton-install install triggers --triggers-version v0.6.0
 # Install latest version of Tekton dashboard component
 tekton-install install dashboard
 
-# Install specific version of Tekton triggers component
+# Install specific version of Tekton dashboard component
 tekton-install install dashboard --dashboard-version v0.6.0
 
 # Install all of latest components
 tekton-install install all
 
-# Install all of components with specific versions
+# Install all components with specific versions
 tekton-install install all --pipeline-version v0.15.0 --triggers-version v0.6.0 --dashboard-version v0.6.0`,
 	Args: cobra.RangeArgs(1, 3),
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -107,7 +107,7 @@ func validateArgsInstall(args []string) error {
 
 	for _, arg := range args {
 		if !validComponents[arg] {
-			return fmt.Errorf("invalid argument provided to uninstall command: %s", arg)
+			return fmt.Errorf("invalid argument provided to install command: %s", arg)
 		}
 
 		if arg == "all" && args[0] != "all" {
