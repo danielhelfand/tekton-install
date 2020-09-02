@@ -35,5 +35,5 @@ tekton-install install all --pipeline-version 0.15.0 --triggers-version 0.6.0 --
 ### Install
 
 ```
-go get github.com/danielhelfand/tekton-install
+go get -u github.com/danielhelfand/tekton-install
 ```
