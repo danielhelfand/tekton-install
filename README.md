@@ -11,25 +11,25 @@ This will also eventually have an uninstall command to uninstall Tekton componen
 tekton-install install pipeline
 
 # Install specific version of Tekton pipeline component
-tekton-install install pipeline --pipeline-version v0.15.0
+tekton-install install pipeline --pipeline-version 0.15.0
 
 # Install latest version of Tekton triggers component
 tekton-install install triggers
 
 # Install specific version of Tekton triggers component
-tekton-install install triggers --triggers-version v0.6.0
+tekton-install install triggers --triggers-version 0.6.0
 
 # Install latest version of Tekton dashboard component
 tekton-install install dashboard
 
 # Install specific version of Tekton dashboard component
-tekton-install install dashboard --dashboard-version v0.6.0
+tekton-install install dashboard --dashboard-version 0.6.0
 
 # Install all of latest components
 tekton-install install all
 
 # Install all components with specific versions
-tekton-install install all --pipeline-version v0.15.0 --triggers-version v0.6.0 --dashboard-version v0.6.0
+tekton-install install all --pipeline-version 0.15.0 --triggers-version 0.6.0 --dashboard-version 0.6.0
 ```
 
 ### Install
