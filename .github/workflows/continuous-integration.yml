@@ -38,3 +38,21 @@ jobs:
 
     - name: Test
       run: go test -v ./...
+    
+    - name: Create KinD cluster
+      uses: engineerd/setup-kind@v0.4.0
+      with:
+          version: "v0.8.0"
+
+    - name: e2e-install
+      run: |
+        kubectl cluster-info
+        
+        echo "Running tekton-install install test"
+        ./tekton-install install pipeline triggers dashboard
+
+        echo "Waiting for Pods to become available in tekton-pipelines namespace"
+        kubectl wait --for=condition=Ready pod -n tekton-pipelines --timeout=3m --all
+
+        echo "Showing available Pods in tekton-pipelines namespace"
+        kubectl get pods -n tekton-pipelines
