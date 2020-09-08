@@ -7,8 +7,8 @@ import (
 )
 
 func Test_validateArgsInstall_Invalid_Argument(t *testing.T) {
-	expectedErr := "invalid argument provided to install command: invalid"
-	err := validateArgsInstall([]string{"invalid", "pipeline"})
+	expectedErr := "invalid argument provided to command: invalid"
+	err := validateArgs([]string{"invalid", "pipeline"})
 	if err == nil {
 		t.Error("expecting error from invalid argument passed to validateArgsInstall but no error returned")
 	}
@@ -20,7 +20,7 @@ func Test_validateArgsInstall_Invalid_Argument(t *testing.T) {
 
 func Test_validateArgsInstall_Invalid_AllNotFirst(t *testing.T) {
 	expectedErr := "all should be only argument provided when used"
-	err := validateArgsInstall([]string{"pipeline", "all"})
+	err := validateArgs([]string{"pipeline", "all"})
 	if err == nil {
 		t.Error("expecting error from all argument used with additional arguments but no error returned")
 	}
@@ -31,14 +31,14 @@ func Test_validateArgsInstall_Invalid_AllNotFirst(t *testing.T) {
 }
 
 func Test_validateArgsInstall_Valid_AllValidArgsPassed(t *testing.T) {
-	err := validateArgsInstall([]string{"pipeline", "triggers", "dashboard"})
+	err := validateArgs([]string{"pipeline", "triggers", "dashboard"})
 	if err != nil {
 		t.Errorf("no error expected but error was returned: %v", err)
 	}
 }
 
 func Test_validateArgsInstall_Valid_SingleArgPassed(t *testing.T) {
-	err := validateArgsInstall([]string{"pipeline"})
+	err := validateArgs([]string{"pipeline"})
 	if err != nil {
 		t.Errorf("no error expected but error was returned: %v", err)
 	}

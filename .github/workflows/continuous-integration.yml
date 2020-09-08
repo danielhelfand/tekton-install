@@ -44,7 +44,7 @@ jobs:
       with:
           version: "v0.8.0"
 
-    - name: e2e-install
+    - name: e2e
       run: |
         kubectl cluster-info
         
@@ -55,4 +55,10 @@ jobs:
         kubectl wait --for=condition=Ready pod -n tekton-pipelines --timeout=3m --all
 
         echo "Showing available Pods in tekton-pipelines namespace"
+        kubectl get pods -n tekton-pipelines
+        
+        echo "Running tekton-install uninstall test"
+        ./tekton-install uninstall triggers dashboard pipeline
+
+        echo "Showing available Pods in tekton-pipelines namespace after uninstall"
         kubectl get pods -n tekton-pipelines
