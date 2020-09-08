@@ -50,7 +50,7 @@ tekton-install install all
 tekton-install install all --pipeline-version 0.15.0 --triggers-version 0.6.0 --dashboard-version 0.6.0`,
 	Args: cobra.RangeArgs(1, 3),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if err := validateArgsInstall(args); err != nil {
+		if err := validateArgs(args); err != nil {
 			return err
 		}
 
@@ -103,7 +103,7 @@ func install(args []string) error {
 	return nil
 }
 
-func validateArgsInstall(args []string) error {
+func validateArgs(args []string) error {
 	validComponents := make(map[string]bool)
 	validComponents[pipeline] = true
 	validComponents[triggers] = true
@@ -112,7 +112,7 @@ func validateArgsInstall(args []string) error {
 
 	for _, arg := range args {
 		if !validComponents[arg] {
-			return fmt.Errorf("invalid argument provided to install command: %s", arg)
+			return fmt.Errorf("invalid argument provided to command: %s", arg)
 		}
 
 		if arg == "all" && args[0] != "all" {
