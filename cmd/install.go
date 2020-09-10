@@ -78,7 +78,8 @@ func install(args []string) error {
 			argv = []string{"apply", "-f", "https://storage.googleapis.com/tekton-releases/" + arg + "/latest/release.yaml"}
 		} else if arg != dashboard {
 			argv = []string{"apply", "-f", "https://storage.googleapis.com/tekton-releases/" + arg + "/previous/v" + componentVersions[arg] + "/release.yaml"}
-		} else if arg == dashboard && componentVersions[arg] == "" {
+		}
+		if arg == dashboard && componentVersions[arg] == "" {
 			argv = []string{"apply", "-f", "https://storage.googleapis.com/tekton-releases/dashboard/latest/tekton-dashboard-release.yaml"}
 		} else if arg == dashboard {
 			argv = []string{"apply", "-f", "https://storage.googleapis.com/tekton-releases/" + arg + "/previous/v" + componentVersions[arg] + "/tekton-dashboard-release.yaml"}
