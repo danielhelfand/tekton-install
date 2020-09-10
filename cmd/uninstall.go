@@ -107,7 +107,7 @@ func getComponentVersion(component string, all bool) (string, error) {
 
 func uninstallComponents(componentVersions map[string]string) error {
 	for _, component := range components {
-		argv := []string{}
+		var argv []string
 		if _, ok := componentVersions[component]; ok {
 			if component != dashboard {
 				argv = []string{"delete", "-f", "https://storage.googleapis.com/tekton-releases/" + component + "/previous/" + componentVersions[component] + "/release.yaml"}
