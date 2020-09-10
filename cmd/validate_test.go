@@ -6,7 +6,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-func Test_validateArgsInstall_Invalid_Argument(t *testing.T) {
+func Test_validateArgs_Invalid_Argument(t *testing.T) {
 	expectedErr := "invalid argument provided to command: invalid"
 	err := validateArgs([]string{"invalid", "pipeline"})
 	if err == nil {
@@ -18,7 +18,7 @@ func Test_validateArgsInstall_Invalid_Argument(t *testing.T) {
 	}
 }
 
-func Test_validateArgsInstall_Invalid_AllNotFirst(t *testing.T) {
+func Test_validateArgs_Invalid_AllNotFirst(t *testing.T) {
 	expectedErr := "all should be only argument provided when used"
 	err := validateArgs([]string{"pipeline", "all"})
 	if err == nil {
@@ -30,14 +30,14 @@ func Test_validateArgsInstall_Invalid_AllNotFirst(t *testing.T) {
 	}
 }
 
-func Test_validateArgsInstall_Valid_AllValidArgsPassed(t *testing.T) {
+func Test_validateArgs_Valid_AllValidArgsPassed(t *testing.T) {
 	err := validateArgs([]string{"pipeline", "triggers", "dashboard"})
 	if err != nil {
 		t.Errorf("no error expected but error was returned: %v", err)
 	}
 }
 
-func Test_validateArgsInstall_Valid_SingleArgPassed(t *testing.T) {
+func Test_validateArgs_Valid_SingleArgPassed(t *testing.T) {
 	err := validateArgs([]string{"pipeline"})
 	if err != nil {
 		t.Errorf("no error expected but error was returned: %v", err)
