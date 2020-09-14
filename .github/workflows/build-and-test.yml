@@ -58,7 +58,7 @@ jobs:
         kubectl get pods -n tekton-pipelines
         
         echo "Running tekton-install uninstall test"
-        ./tekton-install uninstall triggers dashboard pipeline
+        ./tekton-install uninstall triggers dashboard pipeline -f
 
         echo "Showing available Pods in tekton-pipelines namespace after uninstall"
         kubectl get pods -n tekton-pipelines

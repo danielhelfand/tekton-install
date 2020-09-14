@@ -1,14 +1,18 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
 
 var (
+	force      bool
 	components = []string{triggers, dashboard, pipeline}
 )
 
@@ -48,6 +52,15 @@ func uninstall(args []string) error {
 		all = true
 	} else {
 		allArgs = args
+	}
+
+	if !force {
+		err := confirmUninstall(allArgs, os.Stdin)
+		if err != nil {
+			// Return nil for err since err
+			// only occurs when uninstall is cancelled
+			return nil
+		}
 	}
 
 	componentVersions := make(map[string]string)
@@ -115,6 +128,33 @@ func uninstallComponents(componentVersions map[string]string) error {
 	return nil
 }
 
+func confirmUninstall(components []string, reader io.Reader) error {
+	qList := quotedList(components)
+	fmt.Fprintf(os.Stdout, "Are you sure you want to uninstall %s components (y/n): ", qList)
+
+	scanner := bufio.NewScanner(reader)
+	for scanner.Scan() {
+		t := strings.TrimSpace(scanner.Text())
+		if t == "y" {
+			break
+		} else if t == "n" {
+			fmt.Fprintf(os.Stdout, "Cancelling uninstall of %s\n", qList)
+			return fmt.Errorf("cancelling uninstall")
+		}
+		fmt.Fprint(os.Stdout, "Please enter y or n: ")
+	}
+	return nil
+}
+
+func quotedList(components []string) string {
+	quoted := make([]string, len(components))
+	for i := range components {
+		quoted[i] = fmt.Sprintf("%q", components[i])
+	}
+	return strings.Join(quoted, ", ")
+}
+
 func init() {
+	uninstallCmd.Flags().BoolVarP(&force, "force", "f", false, "Skip confirmation prompt for uninstalling components.")
 	rootCmd.AddCommand(uninstallCmd)
 }
