@@ -55,6 +55,9 @@ tekton-install uninstall dashboard
 
 # Uninstall all Tekton components
 tekton-install uninstall all
+
+# Uninstall Tekton components without being prompted for approval
+tekton-install uninstall triggers dashboard pipeline -f
 ```
 
 ### Install tekton-install

@@ -33,7 +33,10 @@ tekton-install uninstall triggers
 tekton-install uninstall dashboard
 
 # Uninstall all Tekton components
-tekton-install uninstall all`,
+tekton-install uninstall all
+
+# Uninstall Tekton components without being prompted for approval
+tekton-install uninstall triggers dashboard pipeline -f`,
 	Args: cobra.RangeArgs(1, 3),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return uninstall(args)
