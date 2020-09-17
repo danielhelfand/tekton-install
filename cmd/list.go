@@ -13,6 +13,10 @@ const (
 	body   = "%s\t%s\n"
 )
 
+var (
+	componentsSorted = []string{dashboard, pipeline, triggers}
+)
+
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List installed Tekton components on a Kubernetes cluster",
@@ -42,8 +46,11 @@ func list(componentVersions map[string]string) {
 	w := tabwriter.NewWriter(os.Stdout, 0, 5, 3, ' ', tabwriter.TabIndent)
 	fmt.Fprintln(w, header)
 
-	for component, version := range componentVersions {
-		fmt.Fprintf(w, body, component, version)
+	for _, component := range componentsSorted {
+		version, ok := componentVersions[component]
+		if ok {
+			fmt.Fprintf(w, body, component, version)
+		}
 	}
 
 	w.Flush()
