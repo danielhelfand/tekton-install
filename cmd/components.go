@@ -5,3 +5,7 @@ const (
 	dashboard = "dashboard"
 	triggers  = "triggers"
 )
+
+var (
+	components = []string{triggers, dashboard, pipeline}
+)

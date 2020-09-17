@@ -60,6 +60,13 @@ tekton-install uninstall all
 tekton-install uninstall triggers dashboard pipeline -f
 ```
 
+#### List
+
+```
+# List available Tekton components on a Kubernetes cluster
+tekton-install list
+```
+
 ### Install tekton-install
 
 ```

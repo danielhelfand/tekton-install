@@ -54,6 +54,9 @@ jobs:
         echo "Waiting for Pods to become available in tekton-pipelines namespace"
         kubectl wait --for=condition=Ready pod -n tekton-pipelines --timeout=3m --all
 
+        echo "Running tekton-install list test with installed components"
+        ./tekton-install list
+
         echo "Showing available Pods in tekton-pipelines namespace"
         kubectl get pods -n tekton-pipelines
         
@@ -62,3 +65,6 @@ jobs:
 
         echo "Showing available Pods in tekton-pipelines namespace after uninstall"
         kubectl get pods -n tekton-pipelines
+
+        echo "Running tekton-install list test with NO installed components"
+        ./tekton-install list
