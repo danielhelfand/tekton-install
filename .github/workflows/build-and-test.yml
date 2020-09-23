@@ -68,3 +68,7 @@ jobs:
 
         echo "Running tekton-install list test with NO installed components"
         ./tekton-install list
+    
+    - name: go e2e
+      run: |
+        go test -v -count=1 -tags=e2e -failfast -timeout=10m ./test/e2e
