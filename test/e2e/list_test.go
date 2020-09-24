@@ -80,7 +80,7 @@ func Test_List_Command(t *testing.T) {
 			t.Log(errMsg)
 		}
 
-		if d := cmp.Diff(string(output), noComponentsMsg); d != "" {
+		if d := cmp.Diff(output, noComponentsMsg); d != "" {
 			t.Fatalf("-got, +want: %v", d)
 		}
 	})
