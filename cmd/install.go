@@ -99,8 +99,8 @@ func install(args []string) error {
 }
 
 func init() {
-	installCmd.Flags().StringVar(&pipelineVersion, "pipeline-version", "", "The version of pipeline to install.")
-	installCmd.Flags().StringVar(&triggersVersion, "triggers-version", "", "The version of triggers to install.")
-	installCmd.Flags().StringVar(&dashboardVersion, "dashboard-version", "", "The version of dashboard to install.")
+	installCmd.Flags().StringVarP(&pipelineVersion, "pipeline-version", "p", "", "The version of pipeline to install.")
+	installCmd.Flags().StringVarP(&triggersVersion, "triggers-version", "t", "", "The version of triggers to install.")
+	installCmd.Flags().StringVarP(&dashboardVersion, "dashboard-version", "d", "", "The version of dashboard to install.")
 	rootCmd.AddCommand(installCmd)
 }

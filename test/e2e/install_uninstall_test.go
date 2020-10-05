@@ -257,6 +257,56 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 			t.Fatalf("-got, +want: %v", d)
 		}
 	})
+
+	t.Run("Install components with shorthands of version", func(t *testing.T) {
+		argv := []string{"install", "all", "-p", "0.16.0", "-t", "0.7.0", "-d", "0.8.0"}
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		if errMsg != "" {
+			t.Log(errMsg)
+		}
+
+		if d := cmp.Diff(output, allCompsInstall); d != "" {
+			t.Fatalf("-got, +want: %v", d)
+		}
+
+		t.Log("Waiting for pods to be available in tekton-pipelines namespace")
+		_, errMsg = WaitForAllPodStatus("Ready", "tekton-pipelines", "3m")
+		if errMsg != "" {
+			t.Log(errMsg)
+		}
+
+		argv = []string{"list"}
+		output, errMsg = ExecuteCommandOutput(TektonInstallCmd, argv)
+		if errMsg != "" {
+			t.Log(errMsg)
+		}
+
+		assert.Assert(t, strings.Contains(output, "pipeline") && strings.Contains(output, "v0.16.0"))
+		assert.Assert(t, strings.Contains(output, "triggers") && strings.Contains(output, "v0.7.0"))
+		assert.Assert(t, strings.Contains(output, "dashboard") && strings.Contains(output, "v0.8.0"))
+	})
+
+	t.Run("Uninstall all components installed with shorthands", func(t *testing.T) {
+		argv := []string{"uninstall", "all", "-f"}
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		if errMsg != "" {
+			t.Log(errMsg)
+		}
+
+		if d := cmp.Diff(output, allCompsUninstall); d != "" {
+			t.Fatalf("-got, +want: %v", d)
+		}
+
+		// Make sure no pods remain after uninstall for all components
+		argv = []string{"get", "pods", "-n", "tekton-pipelines"}
+		output, errMsg = ExecuteCommandOutput(KubectlCmd, argv)
+		if errMsg == "" {
+			t.Logf("Expected no pods to be found but pods were found\n%s", output)
+		}
+		if d := cmp.Diff(errMsg, noResourcesFound); d != "" {
+			t.Fatalf("-got, +want: %v", d)
+		}
+	})
 }
 
 func installSuccess(component string) string {
