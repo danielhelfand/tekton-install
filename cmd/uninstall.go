@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"sort"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -47,13 +48,27 @@ func uninstall(args []string) error {
 		return err
 	}
 
-	var allArgs []string
+	var componentVersions map[string]string
+	var err error
 	all := false
+	var allArgs []string
 	if args[0] == "all" {
-		allArgs = components
-		all = true
+		componentVersions, err = installedComponents(components, !all)
+		if err != nil {
+			return err
+		}
+		allArgs = getKeys(componentVersions)
 	} else {
+		componentVersions, err = installedComponents(args, all)
+		if err != nil {
+			return err
+		}
 		allArgs = args
+	}
+
+	if len(componentVersions) == 0 {
+		fmt.Println("No components on cluster to uninstall")
+		return nil
 	}
 
 	if !force {
@@ -63,22 +78,6 @@ func uninstall(args []string) error {
 			// only occurs when uninstall is cancelled
 			return nil
 		}
-	}
-
-	componentVersions := make(map[string]string)
-	for _, arg := range allArgs {
-		version, err := getComponentVersion(arg, all)
-		if err != nil {
-			return err
-		}
-		if version != "" {
-			componentVersions[arg] = version
-		}
-	}
-
-	if len(componentVersions) == 0 {
-		fmt.Println("No components on cluster to uninstall")
-		return nil
 	}
 
 	return uninstallComponents(componentVersions)
@@ -129,6 +128,33 @@ func quotedList(components []string) string {
 		quoted[i] = fmt.Sprintf("%q", components[i])
 	}
 	return strings.Join(quoted, ", ")
+}
+
+// check what components are installed
+func installedComponents(components []string, all bool) (map[string]string, error) {
+	componentVersions := make(map[string]string)
+	for _, component := range components {
+		version, err := getComponentVersion(component, all)
+		if err != nil {
+			return componentVersions, err
+		}
+		if version != "" {
+			componentVersions[component] = version
+		}
+	}
+
+	return componentVersions, nil
+}
+
+// get keys from map[string]string as list of sorted strings
+func getKeys(data map[string]string) []string {
+	keys := make([]string, 0, len(data))
+	for key := range data {
+		keys = append(keys, key)
+	}
+
+	sort.Strings(keys)
+	return keys
 }
 
 func init() {
