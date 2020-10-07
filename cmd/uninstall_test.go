@@ -124,3 +124,36 @@ func Test_confirmUninstall_Respond_Invalid(t *testing.T) {
 		t.Fatalf("-got, +want: %v", d)
 	}
 }
+
+func Test_getKeys_MoreThanOne(t *testing.T) {
+	expected := []string{"dashboard", "pipeline", "triggers"}
+	componentVersions := map[string]string{
+		"pipeline":  "0.16.2",
+		"triggers":  "0.8.1",
+		"dashboard": "0.8.0",
+	}
+	keys := getKeys(componentVersions)
+	if d := cmp.Diff(keys, expected); d != "" {
+		t.Fatalf("-got, +want: %v", d)
+	}
+}
+
+func Test_getKeys_One(t *testing.T) {
+	expected := []string{"pipeline"}
+	componentVersions := map[string]string{
+		"pipeline": "0.16.2",
+	}
+	keys := getKeys(componentVersions)
+	if d := cmp.Diff(keys, expected); d != "" {
+		t.Fatalf("-got, +want: %v", d)
+	}
+}
+
+func Test_getKeys_None(t *testing.T) {
+	expected := []string{}
+	componentVersions := make(map[string]string)
+	keys := getKeys(componentVersions)
+	if d := cmp.Diff(keys, expected); d != "" {
+		t.Fatalf("-got, +want: %v", d)
+	}
+}
