@@ -20,7 +20,7 @@ const (
 func Test_Install_Uninstall_Commands(t *testing.T) {
 	t.Run("Install pipeline component", func(t *testing.T) {
 		argv := []string{"install", "pipeline"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -30,7 +30,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 		}
 
 		t.Log("Waiting for pods to be available in tekton-pipelines namespace")
-		_, errMsg = WaitForAllPodStatus("Ready", "tekton-pipelines", "3m")
+		_, errMsg = WaitFor("condition=Ready", "tekton-pipelines", "pod", "3m", true)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -38,7 +38,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 	t.Run("Install triggers component", func(t *testing.T) {
 		argv := []string{"install", "triggers"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -48,7 +48,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 		}
 
 		t.Log("Waiting for pods to be available in tekton-pipelines namespace")
-		_, errMsg = WaitForAllPodStatus("Ready", "tekton-pipelines", "3m")
+		_, errMsg = WaitFor("condition=Ready", "tekton-pipelines", "pod", "3m", true)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -56,7 +56,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 	t.Run("Install dashboard component", func(t *testing.T) {
 		argv := []string{"install", "dashboard"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -66,7 +66,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 		}
 
 		t.Log("Waiting for pods to be available in tekton-pipelines namespace")
-		_, errMsg = WaitForAllPodStatus("Ready", "tekton-pipelines", "3m")
+		_, errMsg = WaitFor("condition=Ready", "tekton-pipelines", "pod", "3m", true)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -74,7 +74,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 	t.Run("Uninstall dashboard component", func(t *testing.T) {
 		argv := []string{"uninstall", "dashboard", "-f"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -86,7 +86,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 	t.Run("Uninstall triggers component", func(t *testing.T) {
 		argv := []string{"uninstall", "triggers", "-f"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -98,7 +98,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 	t.Run("Uninstall pipeline component", func(t *testing.T) {
 		argv := []string{"uninstall", "pipeline", "-f"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -109,7 +109,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 		// Make sure no pods remain after uninstall for all components
 		argv = []string{"get", "pods", "-n", "tekton-pipelines"}
-		output, errMsg = ExecuteCommandOutput(KubectlCmd, argv)
+		output, errMsg = ExecuteCommandOutput(KubectlCmd, argv, false)
 		if errMsg == "" {
 			t.Logf("Expected no pods to be found but pods were found\n%s", output)
 		}
@@ -120,7 +120,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 	t.Run("Install all components", func(t *testing.T) {
 		argv := []string{"install", "all"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -130,7 +130,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 		}
 
 		t.Log("Waiting for pods to be available in tekton-pipelines namespace")
-		_, errMsg = WaitForAllPodStatus("Ready", "tekton-pipelines", "3m")
+		_, errMsg = WaitFor("condition=Ready", "tekton-pipelines", "pod", "3m", true)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -138,7 +138,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 	t.Run("Uninstall all components", func(t *testing.T) {
 		argv := []string{"uninstall", "all", "-f"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -149,7 +149,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 		// Make sure no pods remain after uninstall for all components
 		argv = []string{"get", "pods", "-n", "tekton-pipelines"}
-		output, errMsg = ExecuteCommandOutput(KubectlCmd, argv)
+		output, errMsg = ExecuteCommandOutput(KubectlCmd, argv, false)
 		if errMsg == "" {
 			t.Logf("Expected no pods to be found but pods were found\n%s", output)
 		}
@@ -160,7 +160,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 	t.Run("Install pipeline component with version", func(t *testing.T) {
 		argv := []string{"install", "pipeline", "--pipeline-version", "0.16.0"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -170,13 +170,13 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 		}
 
 		t.Log("Waiting for pods to be available in tekton-pipelines namespace")
-		_, errMsg = WaitForAllPodStatus("Ready", "tekton-pipelines", "3m")
+		_, errMsg = WaitFor("condition=Ready", "tekton-pipelines", "pod", "3m", true)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
 
 		argv = []string{"list"}
-		output, errMsg = ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg = ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -186,7 +186,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 	t.Run("Install triggers component with version", func(t *testing.T) {
 		argv := []string{"install", "triggers", "--triggers-version", "0.7.0"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -196,13 +196,13 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 		}
 
 		t.Log("Waiting for pods to be available in tekton-pipelines namespace")
-		_, errMsg = WaitForAllPodStatus("Ready", "tekton-pipelines", "3m")
+		_, errMsg = WaitFor("condition=Ready", "tekton-pipelines", "pod", "3m", true)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
 
 		argv = []string{"list"}
-		output, errMsg = ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg = ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -212,7 +212,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 	t.Run("Install dashboard component with version", func(t *testing.T) {
 		argv := []string{"install", "dashboard", "--dashboard-version", "0.8.0"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -222,13 +222,13 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 		}
 
 		t.Log("Waiting for pods to be available in tekton-pipelines namespace")
-		_, errMsg = WaitForAllPodStatus("Ready", "tekton-pipelines", "3m")
+		_, errMsg = WaitFor("condition=Ready", "tekton-pipelines", "pod", "3m", true)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
 
 		argv = []string{"list"}
-		output, errMsg = ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg = ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -238,7 +238,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 	t.Run("Uninstall all installed components with specific versions", func(t *testing.T) {
 		argv := []string{"uninstall", "all", "-f"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -249,7 +249,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 		// Make sure no pods remain after uninstall for all components
 		argv = []string{"get", "pods", "-n", "tekton-pipelines"}
-		output, errMsg = ExecuteCommandOutput(KubectlCmd, argv)
+		output, errMsg = ExecuteCommandOutput(KubectlCmd, argv, false)
 		if errMsg == "" {
 			t.Logf("Expected no pods to be found but pods were found\n%s", output)
 		}
@@ -260,7 +260,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 	t.Run("Install components with shorthands of version", func(t *testing.T) {
 		argv := []string{"install", "all", "-p", "0.16.0", "-t", "0.7.0", "-d", "0.8.0"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -270,13 +270,13 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 		}
 
 		t.Log("Waiting for pods to be available in tekton-pipelines namespace")
-		_, errMsg = WaitForAllPodStatus("Ready", "tekton-pipelines", "3m")
+		_, errMsg = WaitFor("condition=Ready", "tekton-pipelines", "pod", "3m", true)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
 
 		argv = []string{"list"}
-		output, errMsg = ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg = ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -288,7 +288,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 	t.Run("Uninstall all components installed with shorthands", func(t *testing.T) {
 		argv := []string{"uninstall", "all", "-f"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -299,7 +299,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 		// Make sure no pods remain after uninstall for all components
 		argv = []string{"get", "pods", "-n", "tekton-pipelines"}
-		output, errMsg = ExecuteCommandOutput(KubectlCmd, argv)
+		output, errMsg = ExecuteCommandOutput(KubectlCmd, argv, false)
 		if errMsg == "" {
 			t.Logf("Expected no pods to be found but pods were found\n%s", output)
 		}
@@ -310,7 +310,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 	t.Run("Fail uninstall command if --timeout exceeded", func(t *testing.T) {
 		argv := []string{"install", "pipeline"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -320,14 +320,14 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 		}
 
 		t.Log("Waiting for pods to be available in tekton-pipelines namespace")
-		_, errMsg = WaitForAllPodStatus("Ready", "tekton-pipelines", "3m")
+		_, errMsg = WaitFor("condition=Ready", "tekton-pipelines", "pod", "3m", true)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
 
 		// Specify timeout of 2 seconds and have timeout from kubectl occur
 		argv = []string{"uninstall", "pipeline", "-f", "--timeout", "2s"}
-		output, errMsg = ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg = ExecuteCommandOutput(TektonInstallCmd, argv, true)
 		if errMsg == "" {
 			t.Logf("Expected error message from timeout but received output:\n%s", output)
 		}
@@ -339,7 +339,7 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 
 		// Assure tekton-pipelines namespace is cleaned up for future tests
 		argv = []string{"delete", "namespace", "tekton-pipelines"}
-		output, errMsg = ExecuteCommandOutput(KubectlCmd, argv)
+		output, errMsg = ExecuteCommandOutput(KubectlCmd, argv, false)
 		if errMsg != "" {
 			t.Logf("Error from deleting tekton-pipelines namespace\n%s", errMsg)
 		}
