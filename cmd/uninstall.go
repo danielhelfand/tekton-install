@@ -13,7 +13,8 @@ import (
 )
 
 var (
-	force bool
+	force   bool
+	timeout string
 )
 
 var uninstallCmd = &cobra.Command{
@@ -36,7 +37,12 @@ tekton-install uninstall dashboard
 tekton-install uninstall all
 
 # Uninstall Tekton components without being prompted for approval
-tekton-install uninstall triggers dashboard pipeline -f`,
+tekton-install uninstall triggers dashboard pipeline -f
+
+# Specify a Timeout of 1 minute 30 seconds for uninstalling each component.
+# This example will produce a timeout error if the uninstall process lasts 
+# longer than 1 minute 30 seconds for the triggers, dashboard, or pipeline component
+tekton-install uninstall triggers dashboard pipeline --timeout 1m30s`,
 	Args: cobra.RangeArgs(1, 3),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return uninstall(args)
@@ -88,9 +94,9 @@ func uninstallComponents(componentVersions map[string]string) error {
 		var argv []string
 		if _, ok := componentVersions[component]; ok {
 			if component != dashboard {
-				argv = []string{"delete", "-f", "https://storage.googleapis.com/tekton-releases/" + component + "/previous/" + componentVersions[component] + "/release.yaml"}
+				argv = []string{"delete", "-f", "https://storage.googleapis.com/tekton-releases/" + component + "/previous/" + componentVersions[component] + "/release.yaml", "--timeout", timeout}
 			} else {
-				argv = []string{"delete", "-f", "https://storage.googleapis.com/tekton-releases/" + component + "/previous/" + componentVersions[component] + "/tekton-dashboard-release.yaml"}
+				argv = []string{"delete", "-f", "https://storage.googleapis.com/tekton-releases/" + component + "/previous/" + componentVersions[component] + "/tekton-dashboard-release.yaml", "--timeout", timeout}
 			}
 			kubectlCmd := exec.Command("kubectl", argv...)
 			kubectlCmd.Env = os.Environ()
@@ -159,5 +165,6 @@ func getKeys(data map[string]string) []string {
 
 func init() {
 	uninstallCmd.Flags().BoolVarP(&force, "force", "f", false, "Skip confirmation prompt for uninstalling components.")
+	uninstallCmd.Flags().StringVarP(&timeout, "timeout", "t", "0", "Specify a timeout for each component uninstall. This is not an overall timeout for the uninstall command. Zero means determine a timeout from the size of the object.")
 	rootCmd.AddCommand(uninstallCmd)
 }
