@@ -37,14 +37,14 @@ func setCommandStdOutErr(command *exec.Cmd, stdout, stderr *bytes.Buffer) {
 
 func runCommand(command *exec.Cmd) {
 	if err := command.Run(); err != nil {
-		log.Fatalf("command %s failed", command.Args)
+		log.Printf("command %s failed", command.Args)
 	}
 }
 
 func runCommandOutput(command *exec.Cmd, stdout, stderr *bytes.Buffer) (string, string) {
 	err := command.Run()
 	if err != nil {
-		log.Fatalf("command %s failed", command.Args)
+		log.Printf("command %s failed", command.Args)
 	}
 
 	return stdout.String(), stderr.String()

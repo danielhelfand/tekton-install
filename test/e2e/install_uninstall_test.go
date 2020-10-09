@@ -307,6 +307,48 @@ func Test_Install_Uninstall_Commands(t *testing.T) {
 			t.Fatalf("-got, +want: %v", d)
 		}
 	})
+
+	t.Run("Fail uninstall command if --timeout exceeded", func(t *testing.T) {
+		argv := []string{"install", "pipeline"}
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		if errMsg != "" {
+			t.Log(errMsg)
+		}
+
+		if d := cmp.Diff(output, installSuccess("pipeline")); d != "" {
+			t.Fatalf("-got, +want: %v", d)
+		}
+
+		t.Log("Waiting for pods to be available in tekton-pipelines namespace")
+		_, errMsg = WaitForAllPodStatus("Ready", "tekton-pipelines", "3m")
+		if errMsg != "" {
+			t.Log(errMsg)
+		}
+
+		// Specify timeout of 2 seconds and have timeout from kubectl occur
+		argv = []string{"uninstall", "pipeline", "-f", "--timeout", "2s"}
+		output, errMsg = ExecuteCommandOutput(TektonInstallCmd, argv)
+		if errMsg == "" {
+			t.Logf("Expected error message from timeout but received output:\n%s", output)
+		}
+
+		timeoutErrPipeline := "error: timed out waiting for the condition on namespaces/tekton-pipelines\nError: uninstall of pipeline has failed\n"
+		if d := cmp.Diff(errMsg, timeoutErrPipeline); d != "" {
+			t.Fatalf("-got, +want: %v", d)
+		}
+
+		// Assure tekton-pipelines namespace is cleaned up for future tests
+		argv = []string{"delete", "namespace", "tekton-pipelines"}
+		output, errMsg = ExecuteCommandOutput(KubectlCmd, argv)
+		if errMsg != "" {
+			t.Logf("Error from deleting tekton-pipelines namespace\n%s", errMsg)
+		}
+
+		exptected := "namespace \"tekton-pipelines\" deleted\n"
+		if d := cmp.Diff(output, exptected); d != "" {
+			t.Fatalf("-got, +want: %v", d)
+		}
+	})
 }
 
 func installSuccess(component string) string {
