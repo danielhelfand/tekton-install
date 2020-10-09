@@ -18,7 +18,7 @@ func Test_List_Command(t *testing.T) {
 
 	t.Run("Run list command against empty cluster", func(t *testing.T) {
 		argv := []string{"list"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -34,13 +34,13 @@ func Test_List_Command(t *testing.T) {
 		ExecuteCommand(TektonInstallCmd, argv)
 
 		t.Log("Waiting for pods to be available in tekton-pipelines namespace")
-		_, errMsg := WaitForAllPodStatus("Ready", "tekton-pipelines", "3m")
+		_, errMsg := WaitFor("condition=Ready", "tekton-pipelines", "pod", "3m", true)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
 
 		argv = []string{"list"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -56,7 +56,7 @@ func Test_List_Command(t *testing.T) {
 		ExecuteCommand(TektonInstallCmd, argv)
 
 		argv = []string{"list"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
@@ -75,7 +75,7 @@ func Test_List_Command(t *testing.T) {
 		ExecuteCommand(TektonInstallCmd, argv)
 
 		argv = []string{"list"}
-		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv)
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
 		if errMsg != "" {
 			t.Log(errMsg)
 		}
