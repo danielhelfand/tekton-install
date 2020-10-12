@@ -48,6 +48,17 @@ tekton-install install all --pipeline-version 0.15.0 --triggers-version 0.6.0 --
 			return err
 		}
 
+		firstArg := args[0]
+		if firstArg != pipeline && firstArg != "all" {
+			// Check if pipeline is installed. Needs to
+			// be installed if tiggers/dashboard are only
+			// components being installed.
+			_, err := getComponentVersion(pipeline, false)
+			if err != nil {
+				return fmt.Errorf("%s component must be installed to install %s or %s", pipeline, triggers, dashboard)
+			}
+		}
+
 		return install(args)
 	},
 }
