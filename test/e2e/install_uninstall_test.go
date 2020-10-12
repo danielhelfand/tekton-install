@@ -18,6 +18,19 @@ const (
 )
 
 func Test_Install_Uninstall_Commands(t *testing.T) {
+	t.Run("Error from install of triggers/dashboard without pipeline installed", func(t *testing.T) {
+		argv := []string{"install", "triggers", "dashboard"}
+		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, true)
+		if errMsg == "" {
+			t.Logf("Expected error from installing components without pipeline installed but received output:\n%s", output)
+		}
+
+		expected := "Error: pipeline component must be installed to install triggers or dashboard\n"
+		if d := cmp.Diff(errMsg, expected); d != "" {
+			t.Fatalf("-got, +want: %v", d)
+		}
+	})
+
 	t.Run("Install pipeline component", func(t *testing.T) {
 		argv := []string{"install", "pipeline"}
 		output, errMsg := ExecuteCommandOutput(TektonInstallCmd, argv, false)
