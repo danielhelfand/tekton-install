@@ -9,15 +9,10 @@ import (
 var completionCmd = &cobra.Command{
 	Use:   "completion [bash|zsh]",
 	Short: "Print completion scripts for tekton-install commands",
-	Long: `To load completions for bash and zsh:
+	Long: `Detailed instructions for enabling shell autocompletion 
+with tekton-install are available at the following link:
 
-Bash:
-
-$ source <(tekton-install completion bash)
-
-Zsh:
-
-$ source <(tekton-install completion zsh)`,
+https://github.com/danielhelfand/tekton-install#shell-autocompletion`,
 	DisableFlagsInUseLine: true,
 	ValidArgs:             []string{"bash", "zsh"},
 	Args:                  cobra.ExactValidArgs(1),
