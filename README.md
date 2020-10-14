@@ -11,6 +11,37 @@ There is currently no validation of whether or not certain versions of component
 
 ### Install tekton-install
 
+**Mac**
+
+Run the following commands to download and set up the `tekton-install` binary:
+```
+curl -LO https://github.com/danielhelfand/tekton-install/releases/download/v0.0.1/tekton-install_0.0.1_Darwin_x86_64.tar.gz
+tar xvzf tekton-install_0.0.1_Darwin_x86_64.tar.gz -C /usr/local/bin tekton-install
+``` 
+
+**Windows**
+
+Available for both 32-bit and 64-bit processors.
+
+* Uncompress one of the zip files (i.e. [32-bit](https://github.com/danielhelfand/tekton-install/releases/download/v0.0.1/tekton-install_0.0.1_Windows_i386.zip) or [64-bit](https://github.com/danielhelfand/tekton-install/releases/download/v0.0.1/tekton-install_0.0.1_Windows_x86_64.zip))
+* Add the location of where the executable is to your `Path` by opening `Control Panel>System and Security>System>Advanced System Settings`
+* Click on `Environment Variables`, select the `Path` variable, and click `Edit`
+* Click `New` and add the location of the uncompressed zip to the `Path`
+* Finish by clicking `Ok`
+
+**Linux**
+
+Available for both 32-bit and 64-bit processors. Replace `x86_64` with `i386` in instructions below if 32-bit is required.
+
+Run the following commands to download and set up the `tekton-install` binary:
+```
+curl -LO https://github.com/danielhelfand/tekton-install/releases/download/v0.0.1/tekton-install_0.0.1_Linux_x86_64.tar.gz
+tar xvzf tekton-install_0.0.1_Linux_x86_64.tar.gz -C /usr/local/bin/ tekton-install
+```
+
+**Latest Updates on GitHub**
+
+Download the latest updates from `tekton-install` via `go get`:
 ```
 go get -u github.com/danielhelfand/tekton-install
 ```
