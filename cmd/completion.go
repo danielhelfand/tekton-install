@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"os"
-
 	"github.com/spf13/cobra"
 )
 
@@ -20,9 +18,9 @@ https://github.com/danielhelfand/tekton-install#shell-autocompletion`,
 		var err error
 		switch args[0] {
 		case "bash":
-			err = cmd.Root().GenBashCompletion(os.Stdout)
+			err = cmd.Root().GenBashCompletion(cmd.OutOrStdout())
 		case "zsh":
-			err = cmd.Root().GenZshCompletion(os.Stdout)
+			err = cmd.Root().GenZshCompletion(cmd.OutOrStdout())
 		}
 
 		return err
