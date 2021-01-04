@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+tekton-install install "$@"
